@@ -1,0 +1,21 @@
+#!/bin/bash
+cd /etc/powerdns
+old_hosts=hosts.old
+new_hosts=hosts.txt
+
+if [ ! -e "$old_hosts" ] ; then
+    touch "$old_hosts"
+fi
+wget -q "http://winhelp2002.mvps.org/hosts.txt"
+if ! cmp "$new_hosts" "$old_hosts" >/dev/null 2>&1
+then
+  rm -f hosts.txt
+elif [ cmp "$new_hosts" "$old_hosts" >/dev/null 2>&1 ]; then
+  perl auth-zone.pl > auth.zone
+  sed -i "/auth-zones=/d" recursor.conf
+  cat auth.zone >> recursor.conf
+  service pdns-recursor restart > /dev/null 2>&1
+  rm -f auth.zone
+  rm -f "$old_hosts"
+  mv "$new_hosts" "$old_hosts"
+fi

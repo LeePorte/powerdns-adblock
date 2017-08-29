@@ -1,0 +1,22 @@
+; BIND db file for ad servers - point all addresses to localhost
+;
+; This file comes from:
+;
+;       http://adminsehow.com
+ 
+$TTL    300   ; one day
+ 
+@       IN      SOA     ns0.example.net.      hostmaster.example.net. (
+                        2002061005       ; serial number YYMMDDNN
+                        300   ; refresh  8 hours
+                        300    ; retry    2 hours
+                        300  ; expire  10 days
+                        300 ) ; min ttl  1 day
+                NS      ns0.example.net.
+                NS      ns1.example.net.
+ 
+                A       127.0.0.1
+                AAAA    ::1
+ 
+*               IN      A       127.0.0.1
+*               IN      AAAA    ::1
